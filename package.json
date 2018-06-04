@@ -1,0 +1,34 @@
+{
+  "name": "wecache",
+  "version": "1.0.0",
+  "description": "cache for wechat mini program",
+  "main": "dist/wecache.js",
+  "scripts": {
+    "test": "mocha",
+    "bundle": "rollup src/wecache.js -f umd -n wecache -o dist/wecache.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/klouskingsley/wecache.git"
+  },
+  "keywords": [
+    "cache",
+    "wechat",
+    "mini",
+    "program",
+    "expire",
+    "getStorage",
+    "getStorageSync",
+    "wx",
+    "wxapp"
+  ],
+  "author": "klouskingsley",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/klouskingsley/wecache/issues"
+  },
+  "homepage": "https://github.com/klouskingsley/wecache#readme",
+  "devDependencies": {
+    "rollup": "^0.59.4"
+  }
+}
