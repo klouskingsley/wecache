@@ -4,7 +4,7 @@
   "description": "cache for wechat mini program",
   "main": "dist/wecache.js",
   "scripts": {
-    "test": "mocha",
+    "test": "karma start",
     "bundle": "rollup src/wecache.js -f umd -n wecache -o dist/wecache.js"
   },
   "repository": {
@@ -29,6 +29,13 @@
   },
   "homepage": "https://github.com/klouskingsley/wecache#readme",
   "devDependencies": {
+    "chai": "^4.1.2",
+    "fakemp": "^0.1.0",
+    "karma": "^2.0.2",
+    "karma-chai": "^0.1.0",
+    "karma-chrome-launcher": "^2.2.0",
+    "karma-mocha": "^1.3.0",
+    "mocha": "^5.2.0",
     "rollup": "^0.59.4"
   }
 }
