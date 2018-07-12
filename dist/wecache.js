@@ -11,7 +11,6 @@
 
   function Wecache(opt) {
     opt = typeof opt === 'object' ? opt : {};
-    this.async = opt.async || false;
     this.cacheKey = opt.cacheKey || 'WECACHE';
     this.defaultExpire = checkExpire(opt.defaultExpire) ? opt.defaultExpire : MILLISECONDS_OF_ONE_DAY;
   }
@@ -22,105 +21,41 @@
 
   Wecache.prototype.get = function (key) {
     checkKey(key);
-    if (this.async) {
-      return (
-        this._getCache()
-          .then(this._removeExpire)
-          .then(this._get)
-      )
-    } else {
-      return this._get(this._removeExpire(this._getCache()))
-    }
+    return this._get(this._removeExpire(this._getCache()))
   };
 
   Wecache.prototype.set = function (key, value, expire) {
-    var self = this;
     checkKey(key);
-    if (this.async) {
-      return (
-        this._getCache()
-          .then(function (caches) {
-            return self._set(caches, key, value, expire)
-          })
-          .then(this._removeExpire)
-          .then(function (caches) {
-            return self._setCache(caches)
-          })
-      )
-    } else {
-      var caches = this._getCache();
-      caches = this._set(caches, key, value, expire);
-      caches = this._removeExpire(caches);
-      return this._setCache(caches)
-    }
+    var caches = this._getCache();
+    caches = this._set(caches, key, value, expire);
+    caches = this._removeExpire(caches);
+
+    return this._setCache(caches)
   };
 
   Wecache.prototype.incr = function (key) {
-    var self = this;
     checkKey(key);
-    if (this.async) {
-      return (
-        this._getCache()
-          .then(function (caches) {
-            var value = self._get(caches, key);
-            return self._set(caches, key, value + 1)
-          })
-          .then(this._removeExpire)
-          .then(function (caches) {
-            return self._setCache(caches)
-          })
-      )
-    } else {
-      var caches = this._getCache();
-      var value = this._get(caches, key);
-      caches = this._set(caches, key, value + 1);
-      caches = this._removeExpire(caches);
-      return this._setCache(caches)
-    }
+    var caches = this._getCache();
+    var value = this._get(caches, key);
+    caches = this._set(caches, key, value + 1);
+    caches = this._removeExpire(caches);
+    return this._setCache(caches)
   };
 
   Wecache.prototype.decr = function (key) {
-    var self = this;
     checkKey(key);
-    if (this.async) {
-      return (
-        this._getCache()
-          .then(function (caches) {
-            var value = self._get(caches, key);
-            return self._set(caches, key, value - 1)
-          })
-          .then(this._removeExpire)
-          .then(function (caches) {
-            return self._setCache(caches)
-          })
-      )
-    } else {
-      var caches = this._getCache();
-      var value = this._get(caches, key);
-      caches = this._set(caches, key, value - 1);
-      caches = this._removeExpire(caches);
-      return this._setCache(caches)
-    }
+    var caches = this._getCache();
+    var value = this._get(caches, key);
+    caches = this._set(caches, key, value - 1);
+    caches = this._removeExpire(caches);
+    return this._setCache(caches)
   };
 
   Wecache.prototype.remove = function (key) {
-    var self = this;
-    checkKey();
-    if (this.async) {
-      return (
-        this._getCache()
-          .then(function (caches) {
-            return self._remove(caches, key)
-          })
-          .then(function (caches) {
-            return self._setCache(caches)
-          })
-      )
-    } else {
-      var caches = this._getCache();
-      caches = this._remove(caches, key);
-      return this._setCache(caches)
-    }
+    checkKey(key);
+    var caches = this._getCache();
+    caches = this._remove(caches, key);
+    return this._setCache(caches)
   };
 
   Wecache.prototype.clear = function () {
@@ -148,39 +83,36 @@
     } else if (Object.prototype.toString.call(expire) === '[object Date]') {
       expireTime = expire.getTime();
     }
-    caches[key] = {key: key, value: value, expire: expireTime};
+    caches[key] = {
+      key: key,
+      value: value,
+      expire: expireTime
+    };
     return caches
   };
 
   Wecache.prototype._getCache = function () {
     var self = this;
 
-    if (this.async) {
-      return new Promise(function (resolve, reject) {
-        wx.getStorage({
-          key: self.cacheKey,
-          success: resolve,
-          reject: reject
-        });
-      })
-    } else {
-      return wx.getStorageSync(self.cacheKey)
-    }
+    return wx.getStorageSync(self.cacheKey)
   };
 
   Wecache.prototype._setCache = function (caches) {
     var self = this;
-    if (this.async) {
-      return new Promise(function (resolve, reject) {
-        wx.setStorage({key: self.cacheKey, data: caches, success: resolve, reject: fail});
-      })
-    } else {
-      return wx.setStorageSync({key: self.cacheKey, data: caches})
-    }
+
+    console.log(wx.getStorageSync(self.cacheKey), caches, wx.getStorageInfoSync())
+    wx.setStorageSync({
+      key: self.cacheKey,
+      data: caches
+    })
+    console.log(wx.getStorageSync(self.cacheKey), caches)
   };
 
   Wecache.prototype._isExpire = function (value, now) {
     now = now || (new Date).getTime();
+    if (value.expire === 0) {
+      return false
+    }
     return value.expire < now
   };
 
@@ -207,13 +139,14 @@
     return ret
   };
 
-  function checkKey (key) {
-    if (!key && key !== 0) {
-      throw new TypeError('key should not be a falsy value except 0 ')
+  function checkKey(key) {
+    var type = typeof key;
+    if ((type !== 'number' && type !== 'string') || key === '') {
+      throw new TypeError('key should not be a string(not "") or a number')
     }
   }
 
-  function checkExpire (expire) {
+  function checkExpire(expire) {
     if (typeof expire === 'number') {
       return true
     }
