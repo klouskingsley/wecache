@@ -1,4 +1,4 @@
-# wecache
+# wecache ![Build Status](https://travis-ci.org/klouskingsley/wecache.svg?branch=master)
 
 > local cache library for wechat mini program (using storage) 微信小程序缓存库(使用storage)
 
