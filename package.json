@@ -2,6 +2,7 @@
   "name": "wecache",
   "version": "1.0.0",
   "description": "cache for wechat mini program",
+  "module": "src/wecache.js",
   "main": "dist/wecache.js",
   "scripts": {
     "test": "karma start",
