@@ -48,4 +48,12 @@ describe('sync api', function () {
     assert(wecache.get('c1') === undefined)
     assert(wecache.get('c2') === undefined)
   })
+
+  it('all', function () {
+    wecache.set('a1', 'all1')
+    wecache.set('a2', {a2: 'a2'})
+    const all = wecache.all()
+    assert(all.a1 === 'all1')
+    assert(all.a2.a2 === 'a2')
+  })
 })

@@ -14,13 +14,11 @@ Wecache.prototype.createInstance = function (opt) {
 }
 
 Wecache.prototype.get = function (key) {
-  var self = this
   checkKey(key)
   return this._get(this._removeExpire(this._getCache()), key)
 }
 
 Wecache.prototype.set = function (key, value, expire) {
-  var self = this
   checkKey(key)
   var caches = this._getCache()
   caches = this._set(caches, key, value, expire)
@@ -29,7 +27,6 @@ Wecache.prototype.set = function (key, value, expire) {
 }
 
 Wecache.prototype.incr = function (key) {
-  var self = this
   checkKey(key)
   var caches = this._getCache()
   var value = this._get(caches, key)
@@ -39,7 +36,6 @@ Wecache.prototype.incr = function (key) {
 }
 
 Wecache.prototype.decr = function (key) {
-  var self = this
   checkKey(key)
   var caches = this._getCache()
   var value = this._get(caches, key)
@@ -49,7 +45,6 @@ Wecache.prototype.decr = function (key) {
 }
 
 Wecache.prototype.remove = function (key) {
-  var self = this
   checkKey(key)
   var caches = this._getCache()
   caches = this._remove(caches, key)
@@ -58,6 +53,15 @@ Wecache.prototype.remove = function (key) {
 
 Wecache.prototype.clear = function () {
   return this._setCache({})
+}
+
+Wecache.prototype.all = function () {
+  var caches = this._removeExpire(this._getCache())
+  var ret = {}
+  for (var key in caches) {
+    ret[key] = caches[key].value
+  }
+  return ret
 }
 
 Wecache.prototype._get = function (caches, key) {

@@ -61,6 +61,15 @@
     return this._setCache({})
   };
 
+  Wecache.prototype.all = function () {
+    var caches = this._removeExpire(this._getCache());
+    var ret = {};
+    for (var key in caches) {
+      ret[key] = caches[key].value;
+    }
+    return ret
+  };
+
   Wecache.prototype._get = function (caches, key) {
     caches = caches || {};
     return caches[key] && caches[key].value

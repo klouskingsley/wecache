@@ -73,6 +73,10 @@ Type: `number` or `string`(except "")
 
 Delete all existing items from the storage
 
+#### .all()
+
+Get all caches
+
 ## License
 
 MIT © [klouskingsley](http://github.com/klouskingsley)
