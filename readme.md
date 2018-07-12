@@ -34,6 +34,7 @@ Type: `any`
 #### expire
 
 Type: `number`(milliseconds from now to expire) or `date`(the expire date). if set a number, number should not greater than `1000 * 24 * 3600 * 1000`(milliseconds of one thousands days)
+
 Default: `1 * 24 * 3600 * 1000`(milliseconds of one day)
 
 #### .get(*key*)
@@ -75,7 +76,3 @@ Delete all existing items from the storage
 ## License
 
 MIT © [klouskingsley](http://github.com/klouskingsley)
-
-
-
-

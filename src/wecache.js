@@ -16,7 +16,7 @@ Wecache.prototype.createInstance = function (opt) {
 Wecache.prototype.get = function (key) {
   var self = this
   checkKey(key)
-  return this._get(this._removeExpire(this._getCache()))
+  return this._get(this._removeExpire(this._getCache()), key)
 }
 
 Wecache.prototype.set = function (key, value, expire) {
@@ -97,10 +97,7 @@ Wecache.prototype._getCache = function () {
 
 Wecache.prototype._setCache = function (caches) {
   var self = this
-  return wx.setStorageSync({
-    key: self.cacheKey,
-    data: caches
-  })
+  return wx.setStorageSync(self.cacheKey, caches)
 }
 
 Wecache.prototype._isExpire = function (value, now) {

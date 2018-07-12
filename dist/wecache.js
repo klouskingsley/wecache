@@ -21,7 +21,7 @@
 
   Wecache.prototype.get = function (key) {
     checkKey(key);
-    return this._get(this._removeExpire(this._getCache()))
+    return this._get(this._removeExpire(this._getCache()), key)
   };
 
   Wecache.prototype.set = function (key, value, expire) {
@@ -29,7 +29,6 @@
     var caches = this._getCache();
     caches = this._set(caches, key, value, expire);
     caches = this._removeExpire(caches);
-
     return this._setCache(caches)
   };
 
@@ -99,13 +98,7 @@
 
   Wecache.prototype._setCache = function (caches) {
     var self = this;
-
-    console.log(wx.getStorageSync(self.cacheKey), caches, wx.getStorageInfoSync())
-    wx.setStorageSync({
-      key: self.cacheKey,
-      data: caches
-    })
-    console.log(wx.getStorageSync(self.cacheKey), caches)
+    return wx.setStorageSync(self.cacheKey, caches)
   };
 
   Wecache.prototype._isExpire = function (value, now) {
